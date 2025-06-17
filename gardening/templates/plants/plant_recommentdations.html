@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>AI Recommendations for {{ plant.name }}</h2>
+    <a href="{% url 'garden_detail' plant.garden.id %}?plant={{ plant.id }}" class="btn btn-secondary btn-sm mb-3">Back to Plant</a>
+    <ul class="list-group">
+        {% for rec in recommendations %}
+            <li class="list-group-item">
+                <div>{{ rec.recommendation }}</div>
+                <div class="text-muted" style="font-size:0.9em;">Generated: {{ rec.created_at|date:"Y-m-d H:i" }}</div>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-muted">No recommendations yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

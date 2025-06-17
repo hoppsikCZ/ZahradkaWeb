@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>{% if garden %}Edit Garden{% else %}Add Garden{% endif %}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" id="id_name" value="{{ form.name.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            <textarea name="description" class="form-control" id="id_description">{{ form.description.value|default_if_none:'' }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="id_image" class="form-label">Image</label>
+            <input type="file" name="image" class="form-control" id="id_image">
+        </div>
+        {% if can_edit_users %}
+        <div class="mb-3">
+            <label for="id_users_with_access" class="form-label">Users with Access</label>
+            {{ form.users_with_access }}
+        </div>
+        {% endif %}
+        <button type="submit" class="btn btn-success">{% if garden %}Save Changes{% else %}Add Garden{% endif %}</button>
+        <a href="{% url 'gardens' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Dashboard</h1>
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Sidebar -->
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action active">Overview</a>
+                <a href="{% url 'logout' %}" class="list-group-item list-group-item-action">Logout</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <!-- Main Content -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Welcome to the Dashboard {{ user.username }}</h5>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">My Gardens</div>
+                <ul class="list-group list-group-flush">
+                    {% for garden in my_gardens %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                {{ garden.name }}{% if garden.description %} - {{ garden.description }}{% endif %}
+                            </span>
+                            <span>
+                                <a href="{% url 'garden_detail' garden.id %}" class="btn btn-primary btn-sm">Open</a>
+                                <form method="post" action="{% url 'garden_delete' garden.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this garden?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </span>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">You don't own any gardens yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header bg-info text-white">Shared Gardens</div>
+                <ul class="list-group list-group-flush">
+                    {% for garden in shared_gardens %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                {{ garden.name }} (Owner: {{ garden.owner.username }}){% if garden.description %} - {{ garden.description }}{% endif %}
+                            </span>
+                            <a href="{% url 'garden_detail' garden.id %}" class="btn btn-primary btn-sm">Open</a>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">No gardens shared with you.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

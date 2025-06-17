@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Plant Types</h2>
+    <a href="{% url 'plant_type_add' %}" class="btn btn-success btn-sm mb-3">+ Add Plant Type</a>
+    <ul class="list-group">
+        {% for pt in plant_types %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ pt.name }}
+                <form method="post" action="{% url 'plant_type_delete' pt.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-muted">No plant types.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

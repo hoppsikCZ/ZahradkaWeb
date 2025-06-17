@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Gardens{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'garden_add' %}" class="btn btn-success btn-sm">+ New Garden</a>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm rounded">
+                <div class="card-header bg-success text-white">My Gardens</div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        {% for garden in gardens %}
+                            {% if garden.owner == user %}
+                                <div class="col-md-12 mb-3">
+                                    <div class="card h-100 shadow-sm rounded">
+                                        {% if garden.image %}
+                                            <img class="card-img-top rounded-top" src="{{ garden.image.url }}" alt="Card image cap" style="object-fit:cover; height:180px;">
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ garden.name }}</h5>
+                                            <p class="card-text text-muted">{{ garden.description }}</p>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            {% for plant in garden.plants.all %}
+                                                <li class="list-group-item">{{ plant.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        <div class="card-body d-flex justify-content-between">
+                                            <a href="{% url 'garden_detail' garden.id %}" class="btn btn-primary btn-sm">Open</a>
+                                            <a href="{% url 'garden_edit' garden.id %}" class="btn btn-info btn-sm">Edit</a>
+                                            <a href="{% url 'garden_delete' garden.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="text-muted">You don't own any gardens yet.</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4 shadow-sm rounded">
+                <div class="card-header bg-info text-white">Shared Gardens</div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        {% for garden in gardens %}
+                            {% if garden.owner != user %}
+                                <div class="col-md-12 mb-3">
+                                    <div class="card h-100 shadow-sm rounded">
+                                        {% if garden.image %}
+                                            <img class="card-img-top rounded-top" src="{{ garden.image.url }}" alt="Card image cap" style="object-fit:cover; height:180px;">
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ garden.name }}</h5>
+                                            <p class="card-text text-muted">{{ garden.description }}</p>
+                                            <p class="card-text"><small class="text-muted">Owner: {{ garden.owner.username }}</small></p>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            {% for plant in garden.plants.all %}
+                                                <li class="list-group-item">{{ plant.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        <div class="card-body d-flex justify-content-between">
+                                            <a href="{% url 'garden_detail' garden.id %}" class="btn btn-primary btn-sm">Open</a>
+                                            <a href="{% url 'garden_edit' garden.id %}" class="btn btn-info btn-sm">Edit</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="text-muted">No gardens shared with you.</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
