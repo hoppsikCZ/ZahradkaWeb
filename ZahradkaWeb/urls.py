@@ -25,7 +25,6 @@ urlpatterns = [
     # Include URLs from the gardening app
     path('gardening/', include('gardening.urls')),
     path('', lambda request: redirect('gardening/', permanent=True)),
-
 ]
 
 if settings.DEBUG:
